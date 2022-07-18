@@ -2,7 +2,7 @@ const fs = require('fs');
 const lighthouse = require('lighthouse');
 const chromeLauncher = require('chrome-launcher');
 
-async function main(args){
+exports.main = (args) => {
     let output = ''
 
   const chrome = await chromeLauncher.launch({chromeFlags: ['--headless']});
