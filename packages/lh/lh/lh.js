@@ -1,12 +1,21 @@
-const fs = require('fs');
 const lighthouse = require('lighthouse');
-const chromeLauncher = require('chrome-launcher');
+	
+const launchChrome = require  ("@serverless-chrome/lambda");
+const request = require  ("superagent");
+const {URL} = require('url');
 
 exports.main = (args) => {
     let output = ''
 
-  const chrome = await chromeLauncher.launch({chromeFlags: ['--headless']});
-  const options = {logLevel: 'error', output: 'json', onlyCategories: ['performance', 'seo'], port: chrome.port};
+    const chrome = await launchChrome();
+ 
+    const response = await request
+      .get(`${chrome.url}/json/version`)
+      .set("Content-Type", "application/json");
+   
+    const endpoint = response.body.webSocketDebuggerUrl;
+
+  const options = {logLevel: 'error', output: 'json', onlyCategories: ['performance', 'seo'], port: (new URL(endpoint)).port,};
   const config = {
     extends: 'lighthouse:default',
     settings: {
@@ -33,13 +42,13 @@ exports.main = (args) => {
   const runnerResult = await lighthouse('https://example.com', options, config);
 
   // `.report` is the HTML report as a string
-  const reportHtml = runnerResult.report;
-  fs.writeFileSync('lhreport.html', reportHtml);
+  //const reportHtml = runnerResult.report;
+  //fs.writeFileSync('lhreport.html', reportHtml);
 
   // `.lhr` is the Lighthouse Result as a JS object
   console.log('Report is done for', runnerResult.lhr.finalUrl);
   output = runnerResult.lhr.categories;
-
+console.log(output)
   await chrome.kill();
 
 

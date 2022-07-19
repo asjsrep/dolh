@@ -2,14 +2,16 @@
   "name": "lighthouse",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "lh.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "chrome-launcher": "^0.15.1",
-    "lighthouse": "^9.6.3"
+    "@serverless-chrome/lambda": "^1.0.0-57.2",
+    "lighthouse": "^9.6.3",
+    "superagent": "^8.0.0",
+    "url": "^0.11.0"
   }
 }
